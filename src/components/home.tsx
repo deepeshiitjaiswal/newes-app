@@ -48,11 +48,13 @@ const Home = ({
 
     return () => clearInterval(refreshInterval);
   }, [selectedCategory]);
+
   const [searchTerm, setSearchTerm] = React.useState("");
   const [selectedTags, setSelectedTags] = React.useState(initialTags);
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+    setSelectedCategory(category.toLowerCase());
+    setIsLoading(true);
   };
 
   const handleSearch = (term: string) => {
@@ -69,9 +71,11 @@ const Home = ({
   };
 
   return (
-    <div className="min-h-screen flex bg-background">
-      <aside className="w-64 bg-white border-r border-gray-200 p-4 flex flex-col gap-4">
-        <h1 className="text-xl font-bold text-primary">the news dispatch</h1>
+    <div className="min-h-screen flex bg-background dark:bg-gray-950">
+      <aside className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-4 flex flex-col gap-4">
+        <h1 className="text-xl font-bold text-primary dark:text-white">
+          the news dispatch
+        </h1>
         <nav className="space-y-2">
           {[
             "Latest",
@@ -83,7 +87,7 @@ const Home = ({
           ].map((item) => (
             <button
               key={item}
-              className={`w-full text-left px-4 py-2 rounded-lg ${selectedCategory === item.toLowerCase() ? "bg-red-50 text-primary" : "text-gray-600 hover:bg-gray-50"}`}
+              className={`w-full text-left px-4 py-2 rounded-lg ${selectedCategory === item.toLowerCase() ? "bg-red-50 dark:bg-gray-800 text-primary dark:text-white" : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"}`}
               onClick={() => handleCategoryChange(item.toLowerCase())}
             >
               {item}
