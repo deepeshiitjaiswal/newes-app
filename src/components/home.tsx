@@ -4,6 +4,7 @@ import { NewsItem } from "@/types/news";
 import NewsHeader from "./NewsHeader";
 import TagFilter from "./TagFilter";
 import NewsFeed from "./NewsFeed";
+import { tools } from "@/data/tools";
 
 interface HomeProps {
   initialCategory?: string;
@@ -32,12 +33,16 @@ const Home = ({
     React.useState(initialCategory);
   const [newsItems, setNewsItems] = React.useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [selectedTags, setSelectedTags] = React.useState(initialTags);
+  const [filteredNews, setFilteredNews] = React.useState<NewsItem[]>([]);
 
   useEffect(() => {
     const fetchNewsData = async () => {
       setIsLoading(true);
       const news = await fetchNews(selectedCategory);
       setNewsItems(news);
+      setFilteredNews(news);
       setIsLoading(false);
     };
 
@@ -49,9 +54,6 @@ const Home = ({
     return () => clearInterval(refreshInterval);
   }, [selectedCategory]);
 
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [selectedTags, setSelectedTags] = React.useState(initialTags);
-
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category.toLowerCase());
     setIsLoading(true);
@@ -59,6 +61,20 @@ const Home = ({
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+    if (term.trim() === "") {
+      setFilteredNews(newsItems);
+      return;
+    }
+
+    const searchLower = term.toLowerCase();
+    const filtered = newsItems.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(searchLower) ||
+        item.description.toLowerCase().includes(searchLower) ||
+        item.tags.some((tag) => tag.toLowerCase().includes(searchLower))
+      );
+    });
+    setFilteredNews(filtered);
   };
 
   const handleTagSelect = (tagId: string) => {
@@ -68,7 +84,26 @@ const Home = ({
         selected: tag.id === tagId ? !tag.selected : tag.selected,
       })),
     );
+
+    // Filter news based on selected tags
+    const selectedTagNames = selectedTags
+      .filter((tag) => tag.selected)
+      .map((tag) => tag.name.toLowerCase());
+
+    if (selectedTagNames.length === 0) {
+      setFilteredNews(newsItems);
+    } else {
+      const filtered = newsItems.filter((item) =>
+        item.tags.some((tag) => selectedTagNames.includes(tag.toLowerCase())),
+      );
+      setFilteredNews(filtered);
+    }
   };
+
+  // Filter tools based on selected category
+  const filteredTools = tools.filter(
+    (tool) => tool.category.toLowerCase() === selectedCategory,
+  );
 
   return (
     <div className="min-h-screen flex bg-background dark:bg-gray-950">
@@ -94,6 +129,36 @@ const Home = ({
             </button>
           ))}
         </nav>
+
+        {/* Tools Section */}
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+            Popular Tools
+          </h2>
+          <div className="space-y-3">
+            {filteredTools.map((tool) => (
+              <a
+                key={tool.id}
+                href={tool.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <div className="font-medium text-gray-900 dark:text-white">
+                  {tool.name}
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {tool.description}
+                </p>
+                {tool.stars && (
+                  <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                    ⭐ {tool.stars.toLocaleString()}
+                  </div>
+                )}
+              </a>
+            ))}
+          </div>
+        </div>
       </aside>
       <main className="flex-1 flex flex-col">
         <NewsHeader
@@ -103,7 +168,7 @@ const Home = ({
         />
         <TagFilter tags={selectedTags} onTagSelect={handleTagSelect} />
         <div className="flex-1">
-          <NewsFeed items={newsItems} isLoading={isLoading} />
+          <NewsFeed items={filteredNews} isLoading={isLoading} />
         </div>
       </main>
     </div>
