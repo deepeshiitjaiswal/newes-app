@@ -122,7 +122,7 @@ const Home = ({
           ].map((item) => (
             <button
               key={item}
-              className={`w-full text-left px-4 py-2 rounded-lg ${selectedCategory === item.toLowerCase() ? "bg-red-50 dark:bg-gray-800 text-primary dark:text-white" : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"}`}
+              className={`w-full text-left px-4 py-2 rounded-lg ${selectedCategory === item.toLowerCase() ? "bg-primary/10 dark:bg-primary/20 text-primary dark:text-white font-medium" : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"}`}
               onClick={() => handleCategoryChange(item.toLowerCase())}
             >
               {item}
@@ -142,17 +142,18 @@ const Home = ({
                 href={tool.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="block p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
               >
                 <div className="font-medium text-gray-900 dark:text-white">
                   {tool.name}
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                   {tool.description}
                 </p>
                 {tool.stars && (
-                  <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                    ⭐ {tool.stars.toLocaleString()}
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
+                    <span className="text-yellow-500">⭐</span>
+                    {tool.stars.toLocaleString()}
                   </div>
                 )}
               </a>

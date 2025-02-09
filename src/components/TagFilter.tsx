@@ -32,7 +32,7 @@ const TagFilter = ({
   onTagSelect = () => {},
 }: TagFilterProps) => {
   return (
-    <div className="w-full bg-white border-b">
+    <div className="w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
       <ScrollArea className="w-full whitespace-nowrap p-4">
         <div className="flex space-x-2 p-1">
           <TooltipProvider>
@@ -41,16 +41,18 @@ const TagFilter = ({
                 <TooltipTrigger>
                   <Badge
                     variant={tag.selected ? "default" : "outline"}
-                    className={`cursor-pointer hover:bg-primary/90 transition-colors ${tag.selected ? "bg-primary text-primary-foreground" : "hover:text-primary-foreground"}`}
+                    className={`cursor-pointer transition-colors ${tag.selected ? "bg-primary hover:bg-primary/90 text-white dark:bg-primary dark:hover:bg-primary/90" : "hover:bg-primary/10 dark:hover:bg-primary/20 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700"}`}
                     onClick={() => onTagSelect(tag.id)}
                   >
                     {tag.name}
                     {tag.count !== undefined && (
-                      <span className="ml-1 text-xs">({tag.count})</span>
+                      <span className="ml-1 text-xs opacity-80">
+                        ({tag.count})
+                      </span>
                     )}
                   </Badge>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent className="bg-gray-900 text-white dark:bg-gray-800">
                   <p>Filter by {tag.name}</p>
                 </TooltipContent>
               </Tooltip>

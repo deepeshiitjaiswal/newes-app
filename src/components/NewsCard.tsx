@@ -33,13 +33,15 @@ const NewsCard = React.memo(
     date = "2024-03-21",
   }: NewsCardProps) => {
     const categoryColors = {
-      DevOps: "bg-blue-100 text-blue-800",
-      MLOps: "bg-purple-100 text-purple-800",
-      DataOps: "bg-green-100 text-green-800",
+      DevOps: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+      MLOps:
+        "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+      DataOps:
+        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
     };
 
     return (
-      <Card className="w-full bg-white hover:shadow-lg transition-shadow duration-200 flex flex-col overflow-hidden">
+      <Card className="w-full bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow duration-200 flex flex-col overflow-hidden border-gray-200 dark:border-gray-800">
         <div className="relative h-40 w-full overflow-hidden">
           <img
             src={imageUrl}
@@ -50,7 +52,7 @@ const NewsCard = React.memo(
           <div className="absolute top-2 right-2">
             <Badge
               variant="secondary"
-              className={`${categoryColors[category]} border-none`}
+              className={`${categoryColors[category]} border-none font-medium`}
             >
               {category}
             </Badge>
@@ -58,24 +60,33 @@ const NewsCard = React.memo(
         </div>
 
         <CardHeader className="p-4 pb-2">
-          <CardTitle className="text-lg font-semibold line-clamp-1">
+          <CardTitle className="text-lg font-semibold line-clamp-1 text-gray-900 dark:text-white">
             {title}
           </CardTitle>
-          <CardDescription className="text-xs text-gray-500">
+          <CardDescription className="text-xs text-gray-600 dark:text-gray-400">
             {source} • {date}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="p-4 pt-0 flex-grow">
-          <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+            {description}
+          </p>
           <div className="mt-2 flex flex-wrap gap-1">
             {tags.slice(0, 2).map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
+              <Badge
+                key={tag}
+                variant="outline"
+                className="text-xs border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300"
+              >
                 {tag}
               </Badge>
             ))}
             {tags.length > 2 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge
+                variant="outline"
+                className="text-xs border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300"
+              >
                 +{tags.length - 2}
               </Badge>
             )}
@@ -87,7 +98,7 @@ const NewsCard = React.memo(
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+            className="text-sm text-primary hover:text-primary/90 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1 transition-colors"
           >
             Read more <ExternalLink size={14} />
           </a>
