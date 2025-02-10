@@ -21,7 +21,6 @@ const defaultItems: NewsItem[] = [
     link: "https://kubernetes.io",
     date: "2024-03-21",
   },
-  // ... other default items remain the same
 ];
 
 const NewsFeed = React.memo(
@@ -55,14 +54,14 @@ const NewsFeed = React.memo(
     );
 
     return (
-      <div className="w-full h-full bg-gray-50 p-6 overflow-auto">
+      <div className="w-full h-full bg-gray-50 dark:bg-gray-900 p-4 md:p-6 overflow-auto">
         <ScrollArea className="h-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6 justify-items-center">
             {isLoading
               ? Array.from({ length: 4 }).map((_, index) => (
                   <div
                     key={index}
-                    className="w-full h-[320px] bg-gray-200 rounded-lg animate-pulse"
+                    className="w-full h-[320px] bg-gray-200 dark:bg-gray-800 rounded-lg animate-pulse"
                   />
                 ))
               : visibleItems.map((item, index) => (
@@ -86,6 +85,11 @@ const NewsFeed = React.memo(
                   </div>
                 ))}
           </div>
+          {!isLoading && visibleItems.length < items.length && (
+            <div className="w-full flex justify-center py-4">
+              <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
         </ScrollArea>
       </div>
     );
